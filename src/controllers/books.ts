@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { ValidateError } from '../error.js';
+import { ValidateError } from '../utils/error.js';
 import { addJobs } from '../queues.js';
 import { service } from '../service.js';
 

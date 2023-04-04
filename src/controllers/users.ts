@@ -1,82 +1,113 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { ValidateError } from '../error.js';
-import { User } from '../entity/User.js';
-import { tokenService } from '../tokenService.js';
-import { AppDataSource } from '../data-source.js';
+import { ValidateError } from '../utils/error.js';
 import bcrypt from 'bcrypt';
+import { validateFields } from '../utils/validator.js';
+import jwt from 'jsonwebtoken';
+import config from '../utils/config.js';
+import { service } from '../service.js';
 
-export interface UserDTO {
+type AuthData = { login: string; password: string };
+
+export type UserData = {
   firstName: string;
   lastName: string;
   password: string;
   passwordConfirm: string;
   login: string;
-}
-
-type Rule = {
-  field: string;
-  isCorrect: (user: UserDTO) => boolean;
-  getMessage: (field: string) => string;
 };
 
-const userMandatoryFileds: Rule[] = [
+const userMandatoryFileds = [
   {
     field: 'firstName',
-    isCorrect: (user: UserDTO) => !!user.firstName,
+    isCorrect: (user: UserData) => !!user.firstName,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'lastName',
-    isCorrect: (user: UserDTO) => !!user.lastName,
+    isCorrect: (user: UserData) => !!user.lastName,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'password',
-    isCorrect: (user: UserDTO) => !!user.password,
+    isCorrect: (user: UserData) => !!user.password,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'passwordConfirm',
-    isCorrect: (user: UserDTO) => user.password === user.passwordConfirm,
-    getMessage: (field: string) => `The password confirm should be equal to password`,
+    isCorrect: (user: UserData) => user.password === user.passwordConfirm,
+    getMessage: (_field: string) => `The password confirm should be equal to password`,
   },
   {
     field: 'login',
-    isCorrect: (user: UserDTO) => !!user.login,
+    isCorrect: (user: UserData) => !!user.login,
+    getMessage: (field: string) => `The ${field} field is required!`,
+  },
+];
+
+const authMandatoryFileds = [
+  {
+    field: 'password',
+    isCorrect: (user: AuthData) => !!user.password,
+    getMessage: (field: string) => `The ${field} field is required!`,
+  },
+  {
+    field: 'login',
+    isCorrect: (user: AuthData) => !!user.login,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
 ];
 
 class UserController {
-  async register(request: FastifyRequest, reply: FastifyReply) {
-    const body = request.body as UserDTO;
+  getToken(payload: { login: string }) {
+    return jwt.sign(payload, config.JWT_SECRET, { expiresIn: 1000 * 60 });
+  }
 
-    const errors = userMandatoryFileds
-      .map(({ field, isCorrect: check, getMessage }) => (check(body) ? '' : getMessage(field)))
-      .filter(Boolean);
+  async register(request: FastifyRequest, reply: FastifyReply) {
+    const body = request.body as UserData;
+
+    const errors = validateFields(userMandatoryFileds, body);
 
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
-    const existingUser = await AppDataSource.manager.findOneBy(User, { login: body.login });
+    const existingUser = await service.getUser(body.login);
 
     if (existingUser) throw new ValidateError('User with this login is alredy exist', 400);
 
-    const hashPassword = await bcrypt.hash(body.password, 3);
+    const hashPassword = await bcrypt.hash(body.password, config.SALT);
 
-    const user = new User();
-    user.firstName = body.firstName;
-    user.lastName = body.lastName;
-    user.hashPassword = hashPassword;
-    user.login = body.login;
+    await service.adduser({ ...body, hashPassword });
 
-    await AppDataSource.manager.save(user);
-
-    const token = tokenService.getToken(body);
+    const token = this.getToken({ login: body.login });
 
     reply
       .headers({ Authorization: token })
       .status(200)
-      .send({ message: `The user ${user.firstName} was created!` });
+      .send({ message: `The user ${body.firstName} was created!` });
+  }
+
+  async login(request: FastifyRequest, reply: FastifyReply) {
+    const body = request.body as AuthData;
+
+    const errors = validateFields(authMandatoryFileds, body);
+
+    if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
+
+    const user = await service.getUser(body.login);
+
+    if (!user) throw new ValidateError('Wrong login or password', 400);
+
+    const isPasswordCorrect = await bcrypt.compare(body.password, user.hashPassword);
+
+    if (!isPasswordCorrect) throw new ValidateError('Wrong login or password', 400);
+
+    const token = this.getToken({ login: body.login });
+
+    reply.headers({ Authorization: token }).status(200);
+  }
+
+  async getUsers(_request: FastifyRequest, reply: FastifyReply) {
+    const users = await service.getUsers();
+    reply.status(200).send(users);
   }
 }
 

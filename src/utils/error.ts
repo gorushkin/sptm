@@ -17,3 +17,10 @@ export class ValidateError extends CustomError {
     this.errors = errors || [];
   }
 }
+
+export class AuthError extends CustomError {
+  constructor() {
+    super('Forbidden', 403);
+    this.type = 'Auth Error';
+  }
+}
