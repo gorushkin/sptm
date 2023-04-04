@@ -73,7 +73,7 @@ class UserController {
 
     if (existingUser) throw new ValidateError('User with this login is alredy exist', 400);
 
-    const hashPassword = await bcrypt.hash(body.password, config.SALT);
+    const hashPassword = await bcrypt.hash(body.password, 3);
 
     await service.adduser({ ...body, hashPassword });
 
