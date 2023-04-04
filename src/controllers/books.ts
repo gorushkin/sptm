@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { ValidateError } from './error.js';
-import { addJobs } from './queues.js';
-import { service } from './service.js';
+import { ValidateError } from '../utils/error.js';
+import { addJobs } from '../queues.js';
+import { service } from '../service.js';
 
 export const addBook = async (request: FastifyRequest, reply: FastifyReply) => {
   const body = request.body as { title: string; author: string; content: string };

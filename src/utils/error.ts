@@ -9,8 +9,18 @@ export class CustomError extends Error {
 }
 
 export class ValidateError extends CustomError {
-  constructor(error: string, statusCode: number) {
+  errors: string[];
+
+  constructor(error: string, statusCode: number, errors?: string[]) {
     super(error, statusCode);
     this.type = 'Validate Error';
+    this.errors = errors || [];
+  }
+}
+
+export class AuthError extends CustomError {
+  constructor() {
+    super('Forbidden', 403);
+    this.type = 'Auth Error';
   }
 }
