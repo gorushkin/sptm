@@ -1,16 +1,23 @@
-import { Entity, ObjectIdColumn, Column, } from 'typeorm';
+import { Entity, ObjectIdColumn, Column, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['login'])
 export class User {
   @ObjectIdColumn()
-    id: number;
+  id: number;
 
   @Column()
-    firstName: string;
+  firstName: string;
 
   @Column()
-    lastName: string;
+  lastName: string;
 
   @Column()
-    age: number;
+  age: number;
+
+  @Column()
+  hashPassword: string;
+
+  @Column()
+  login: string;
 }
