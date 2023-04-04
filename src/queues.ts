@@ -1,7 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import { service } from './service.js';
-
-type BookData = { title: string; author: string; content: string };
+import { BookData } from './controllers/books.js';
 
 const myQueue = new Queue('book');
 
