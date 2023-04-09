@@ -3,7 +3,7 @@ import { ValidateError } from '../utils/error.js';
 import bcrypt from 'bcrypt';
 import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
-import config from '../utils/config.js';
+import { config } from '../utils/config.js';
 import { userService } from '../services/user.js';
 import { AuthData, UserData } from 'src/types.js';
 

@@ -1,30 +1,25 @@
 import 'reflect-metadata';
 import path from 'path';
-import { fileURLToPath, } from 'url';
-import { DataSource, } from 'typeorm';
+import { fileURLToPath } from 'url';
+import { DataSource } from 'typeorm';
 
-import config from '../utils/config.js';
+import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
 import { User } from '../entity/User.js';
 
-const _filename = fileURLToPath(import.meta.url,);
-const _dirname = path.dirname(_filename,);
+const _filename = fileURLToPath(import.meta.url);
+const _dirname = path.dirname(_filename);
 
-const MongoDataSource = new DataSource({
-  type: 'mongodb',
-  url: config.MONGODB_URI,
-  useNewUrlParser: true,
-  synchronize: true,
-  useUnifiedTopology: true,
-  username: "booksuser",
-  password: "bookspassword",
+export const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: config.POSTRGERSS_HOST,
+  port: config.POSTRGERSS_PORT,
   logging: true,
-  database: 'books',
-  ssl: false,
-  entities: [ Book, User],
-  migrations: [ `${_dirname}/migrations/*.ts`, ],
+  username: config.POSTGRES_USER,
+  password: config.POSTGRES_PASSWORD,
+  database: config.POSTGRES_DB,
+  synchronize: false,
+  entities: [Book, User],
+  migrations: [`${_dirname}/migrations/*.ts`],
   subscribers: [],
-},);
-
-
-export { MongoDataSource as AppDataSource, };
+});

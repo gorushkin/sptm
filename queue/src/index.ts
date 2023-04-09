@@ -1,24 +1,18 @@
 import { AppDataSource } from './connections/data-source.js';
-import { Worker } from 'bullmq';
-import { handler } from './worker/worker.js';
+import { Book } from './entity/Book.js';
+import { setupWorker } from './worker/worker.js';
+
+
+const getBooks = async () => AppDataSource.manager.find(Book);
 
 const init = async () => {
   try {
     await AppDataSource.initialize();
-
-    const myWorker = new Worker('book', handler);
-
-    myWorker.on('completed', () => {
-      console.log('the book was addded to the list!');
-    });
-
-    myWorker.on('failed', (err) => {
-      console.log('err: ', err);
-    });
-
+    setupWorker();
   } catch (error) {
     console.log(error);
   }
 };
+
 
 init();
