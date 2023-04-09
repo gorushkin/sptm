@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath, } from 'url';
 import { DataSource, } from 'typeorm';
 
-import config from './utils/config.js';
+import config from '../utils/config.js';
 
 const _filename = fileURLToPath(import.meta.url,);
 const _dirname = path.dirname(_filename,);

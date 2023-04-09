@@ -1,5 +1,5 @@
-import { AppDataSource } from '../src/data-source.js';
-import { appStart } from './app.js';
+import { AppDataSource } from './connections/data-source.js';
+import { appStart } from './app/app.js';
 import config from './utils/config.js';
 
 const init = async () => {

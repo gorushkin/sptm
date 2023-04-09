@@ -1,6 +1,6 @@
 import { Queue, Worker } from 'bullmq';
-import { service } from './service.js';
-import { BookData } from './controllers/books.js';
+import { BookData } from '../controllers/books.js';
+import { bookService } from '../services/book.js';
 
 const myQueue = new Queue('book');
 
@@ -9,10 +9,10 @@ const myWorker = new Worker('book', async (job) => {
     body: BookData;
   };
 
-  await service.addBook(body);
+  await bookService.addBook(body);
 });
 
-const addJobs = async (body: BookData) => {
+const addBook = async (body: BookData) => {
   await myQueue.add('book', { body });
 };
 
@@ -24,4 +24,4 @@ myWorker.on('failed', (err) => {
   console.log('err: ', err);
 });
 
-export { addJobs };
+export const queue = { addBook };

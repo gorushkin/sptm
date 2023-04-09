@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
 import config from '../utils/config.js';
-import { service } from '../service.js';
+import { userService } from '../services/user.js';
 
 type AuthData = { login: string; password: string };
 
@@ -69,13 +69,13 @@ class UserController {
 
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
-    const existingUser = await service.getUser(body.login);
+    const existingUser = await userService.getUser(body.login);
 
     if (existingUser) throw new ValidateError('User with this login is alredy exist', 400);
 
     const hashPassword = await bcrypt.hash(body.password, config.SALT);
 
-    await service.adduser({ ...body, hashPassword });
+    await userService.adduser({ ...body, hashPassword });
 
     const token = this.getToken({ login: body.login });
 
@@ -92,7 +92,7 @@ class UserController {
 
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
-    const user = await service.getUser(body.login);
+    const user = await userService.getUser(body.login);
 
     if (!user) throw new ValidateError('Wrong login or password', 400);
 
@@ -106,7 +106,7 @@ class UserController {
   }
 
   async getUsers(_request: FastifyRequest, reply: FastifyReply) {
-    const users = await service.getUsers();
+    const users = await userService.getUsers();
     reply.status(200).send(users);
   }
 }
