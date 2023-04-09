@@ -3,8 +3,7 @@ import { ValidateError } from '../utils/error.js';
 import { bookService } from '../services/book.js';
 import { validateFields } from '../utils/validator.js';
 import { queue } from '../queue/queue.js';
-
-export type BookData = { title: string; author: string; content: string };
+import { BookData } from 'src/types.js';
 
 const bookMandatoryFileds = [
   {

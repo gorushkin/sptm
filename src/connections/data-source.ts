@@ -4,6 +4,8 @@ import { fileURLToPath, } from 'url';
 import { DataSource, } from 'typeorm';
 
 import config from '../utils/config.js';
+import { Book } from '../entity/Book.js';
+import { User } from '../entity/User.js';
 
 const _filename = fileURLToPath(import.meta.url,);
 const _dirname = path.dirname(_filename,);
@@ -19,7 +21,7 @@ const MongoDataSource = new DataSource({
   logging: true,
   database: 'books',
   ssl: false,
-  entities: [ `${_dirname}/entity/*.ts`, ],
+  entities: [ Book, User],
   migrations: [ `${_dirname}/migrations/*.ts`, ],
   subscribers: [],
 },);

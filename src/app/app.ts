@@ -7,7 +7,6 @@ const app = fastify();
 app.register(routes);
 
 app.setErrorHandler(function (error, _request, reply) {
-  console.log('error: ', error);
   if (error instanceof ValidateError) {
     const { message, errors, statusCode } = error;
     reply.status(statusCode).send({ message, errors });
