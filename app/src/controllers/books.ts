@@ -24,6 +24,7 @@ class BookController {
     const errors = validateFields(bookMandatoryFileds, body);
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
+
     await queue.addBook(body);
 
     reply.status(200).send({ message: 'I will add this book a bit later!' });
