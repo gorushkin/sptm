@@ -24,19 +24,15 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     image: postgres:14.5-alpine
-  mongo:
-    container_name: mongo
-    image: mongo:6.0.4
-    restart: unless-stopped
-    volumes:
-      - './private/mongo_data:/var/lib/mongo'
-      - './mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro'
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-      MONGO_INITDB_DATABASE: books
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "27017:27017"
+      - "5050:80"
   worker:
     container_name: worker
     build:
@@ -46,7 +42,6 @@ services:
     volumes:
       - ./queue/src/:/app/src/
     depends_on:
-      - mongo
       - redis
       - postgres
 volumes:
