@@ -27,8 +27,6 @@ class BookController {
 
     await queue.addBook(body);
 
-    await AppDataSource.queryResultCache?.remove(['books']);
-
     reply.status(200).send({ message: 'I will add this book a bit later!' });
   }
 

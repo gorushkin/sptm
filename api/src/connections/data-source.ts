@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { DataSource, } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { createClient } from 'redis';
 
 import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
@@ -9,6 +10,10 @@ import { User } from '../entity/User.js';
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
+
+export const client = createClient({
+  url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}`,
+});
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

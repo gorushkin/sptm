@@ -1,12 +1,16 @@
-import { AppDataSource } from '../connections/data-source.js';
+import { AppDataSource, client } from '../connections/data-source.js';
 import { Book } from '../entity/Book.js';
 
-const getBooks = async () =>
-  AppDataSource.getRepository(Book).find({
-    cache: {
-      id: 'books',
-      milliseconds: 1000,
-    },
-  });
+const getBooks = async () => {
+  const cachedBooks = await client.get('books');
+
+  if (!!cachedBooks) return JSON.parse(cachedBooks) as Book[];
+
+  const books = await AppDataSource.getRepository(Book).find();
+
+  if (!cachedBooks) await client.set('books', JSON.stringify(books));
+
+  return books;
+};
 
 export const bookService = { getBooks };

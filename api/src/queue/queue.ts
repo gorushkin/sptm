@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import { BookData } from 'src/types.js';
+import { BookData } from '../types.js';
 import { config } from '../utils/config.js';
 
 const connection = { host: config.REDIS_HOST, port: config.REDIS_PORT };

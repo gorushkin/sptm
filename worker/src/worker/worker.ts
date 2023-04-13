@@ -1,6 +1,7 @@
 import { Job, Worker } from 'bullmq';
 import { bookService } from '../services/book.js';
 import { config } from '../utils/config.js';
+import { client } from '../connections/data-source.js';
 
 type BookData = { title: string; author: string; content: string };
 
@@ -15,9 +16,10 @@ const handler = async (job: Job) => {
 export const setupWorker = async () => {
   const connection = { host: config.REDIS_HOST, port: config.REDIS_PORT };
 
-  const myWorker = new Worker('book', handler, {connection});
+  const myWorker = new Worker('book', handler, { connection });
 
-  myWorker.on('completed', () => {
+  myWorker.on('completed', async () => {
+    await client.set('books', '');
     console.log('the book was addded to the list!');
   });
 
