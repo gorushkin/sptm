@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ValidateError } from '../utils/error.js';
-import { addJobs } from '../queues.js';
-import { service } from '../service.js';
+import { bookService } from '../services/book.js';
 import { validateFields } from '../utils/validator.js';
-
-export type BookData = { title: string; author: string; content: string };
+import { queue } from '../queue/queue.js';
+import { BookData } from '../types.js';
+import { AppDataSource } from '../connections/data-source.js';
 
 const bookMandatoryFileds = [
   {
@@ -25,13 +25,15 @@ class BookController {
     const errors = validateFields(bookMandatoryFileds, body);
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
-    await addJobs(body);
+    await queue.addBook(body);
+
+    await AppDataSource.queryResultCache?.remove(['books']);
 
     reply.status(200).send({ message: 'I will add this book a bit later!' });
   }
 
   async getBooks(_request: FastifyRequest, reply: FastifyReply) {
-    const books = await service.getBooks();
+    const books = await bookService.getBooks();
     reply.status(200).send(books);
   }
 }

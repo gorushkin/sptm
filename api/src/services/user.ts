@@ -1,24 +1,5 @@
-import { AppDataSource } from './data-source.js';
-import { Book } from './entity/Book.js';
-import { User } from './entity/User.js';
-
-const getBooks = async () => AppDataSource.manager.find(Book);
-
-const addBook = async ({
-  title,
-  author,
-  content,
-}: {
-  title: string;
-  author: string;
-  content: string;
-}) => {
-  const book = new Book();
-  book.title = title;
-  book.author = author;
-  book.content = content;
-  await AppDataSource.manager.save(book);
-};
+import { AppDataSource } from '../connections/data-source.js';
+import { User } from '../entity/User.js';
 
 const getUser = async (login: string) => await AppDataSource.manager.findOneBy(User, { login });
 
@@ -46,4 +27,4 @@ const getUsers = async () => {
   return users;
 };
 
-export const service = { getBooks, addBook, getUser, adduser, getUsers };
+export const userService = { getUser, adduser, getUsers };
