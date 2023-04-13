@@ -5,7 +5,6 @@ import { config } from './utils/config.js';
 const init = async () => {
   try {
     await AppDataSource.initialize();
-    await AppDataSource.runMigrations();
     appStart(config.PORT);
   } catch (error) {
     console.log(error);

@@ -41,6 +41,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^3.7.3",
     "pg": "^8.10.0",
+    "redis": "^4.6.5",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.12"
   }

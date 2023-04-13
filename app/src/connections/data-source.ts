@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { DataSource } from 'typeorm';
+import { DataSource, } from 'typeorm';
 
 import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
@@ -19,6 +19,13 @@ export const AppDataSource = new DataSource({
   database: config.POSTGRES_DB,
   logging: true,
   synchronize: false,
+  cache: {
+    type: 'redis',
+    options: {
+      host: 'localhost',
+      port: 6379,
+    },
+  },
   entities: [Book, User],
   migrations: [`${_dirname}/migrations/*.ts`],
   subscribers: [],

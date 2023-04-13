@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   type: 'postgres',
   host: config.POSTRGERSS_HOST,
   port: config.POSTRGERSS_PORT,
-  logging: true,
+  logging: false,
   username: config.POSTGRES_USER,
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DB,

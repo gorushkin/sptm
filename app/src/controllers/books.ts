@@ -3,7 +3,8 @@ import { ValidateError } from '../utils/error.js';
 import { bookService } from '../services/book.js';
 import { validateFields } from '../utils/validator.js';
 import { queue } from '../queue/queue.js';
-import { BookData } from 'src/types.js';
+import { BookData } from '../types.js';
+import { AppDataSource } from '../connections/data-source.js';
 
 const bookMandatoryFileds = [
   {
@@ -24,8 +25,9 @@ class BookController {
     const errors = validateFields(bookMandatoryFileds, body);
     if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
 
-
     await queue.addBook(body);
+
+    await AppDataSource.queryResultCache?.remove(['books']);
 
     reply.status(200).send({ message: 'I will add this book a bit later!' });
   }

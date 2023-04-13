@@ -1,8 +1,6 @@
 import { AppDataSource } from '../connections/data-source.js';
 import { Book } from '../entity/Book.js';
 
-const getBooks = async () => AppDataSource.manager.find(Book);
-
 const addBook = async ({
   title,
   author,
@@ -16,7 +14,6 @@ const addBook = async ({
   book.title = title;
   book.author = author;
   book.content = content;
-  console.log('book: ', book);
   try {
     await AppDataSource.manager.save(book);
   } catch (error) {
@@ -24,4 +21,4 @@ const addBook = async ({
   }
 };
 
-export const bookService = { getBooks, addBook };
+export const bookService = { addBook };
