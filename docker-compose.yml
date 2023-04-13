@@ -36,11 +36,11 @@ services:
   worker:
     container_name: worker
     build:
-      context: ./queue
+      context: ./worker
     ports:
       - "3050:3050"
     volumes:
-      - ./queue/src/:/app/src/
+      - ./worker/src/:/app/src/
     depends_on:
       - redis
       - postgres
