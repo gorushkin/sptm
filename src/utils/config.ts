@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = Number(process.env.PORT) || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 const SALT = process.env.SALT || 'salt';
@@ -15,9 +14,9 @@ const POSTGRES_DB = process.env.POSTGRES_PASSWORD || 'books';
 const API_HOST = process.env.API_HOST || '0.0.0.0';
 
 export const redisConnection = { host: REDIS_HOST, port: REDIS_PORT };
+console.log('redisConnection: ', redisConnection);
 
 export const config = {
-  MONGODB_URI,
   PORT,
   JWT_SECRET,
   SALT,
@@ -28,5 +27,5 @@ export const config = {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_DB,
-  API_HOST
+  API_HOST,
 };

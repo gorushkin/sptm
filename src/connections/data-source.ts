@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { DataSource } from 'typeorm';
 
-import { config, redisConnection } from '../utils/config.js';
+import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
 import { User } from '../entity/User.js';
 
@@ -19,10 +19,10 @@ export const AppDataSource = new DataSource({
   database: config.POSTGRES_DB,
   logging: true,
   synchronize: true,
-  // cache: {
-  //   type: 'redis',
-  //   options: redisConnection,
-  // },
+  cache: {
+    type: 'redis',
+    options: { url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}` },
+  },
   entities: [Book, User],
   migrations: [`${_dirname}/migrations/*.ts`],
   subscribers: [],
