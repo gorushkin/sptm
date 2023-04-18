@@ -4,7 +4,6 @@ import { bookService } from '../services/book.js';
 import { validateFields } from '../utils/validator.js';
 import { queue } from '../queue/queue.js';
 import { BookDTO } from '../types.js';
-import { AppDataSource } from '../connections/data-source.js';
 
 const bookMandatoryFileds = [
   {
@@ -27,13 +26,10 @@ class BookController {
 
     await queue.addBook(body);
 
-    await AppDataSource.queryResultCache?.remove(['books']);
-
     reply.status(200).send({ message: 'I will add this book a bit later!' });
   }
 
   async getBooks(_request: FastifyRequest, reply: FastifyReply) {
-    console.log('---------------');
     const books = await bookService.getBooks();
     reply.status(200).send(books);
   }

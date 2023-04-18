@@ -1,10 +1,12 @@
 import { AppDataSource } from '../connections/data-source.js';
 import { Book } from '../entity/Book.js';
 
+const bookName = 'books';
+
 const getBooks = async () =>
   AppDataSource.getRepository(Book).find({
     cache: {
-      id: 'books',
+      id: bookName,
       milliseconds: 1000,
     },
   });
@@ -22,6 +24,7 @@ const addBook = async ({
   book.title = title;
   book.author = author;
   book.content = content;
+  await AppDataSource.queryResultCache?.remove([bookName]);
   await AppDataSource.manager.save(book);
 };
 
