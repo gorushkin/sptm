@@ -37,16 +37,16 @@ services:
       - '5050:80'
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-  # app:
-  #   container_name: api
-  #   build:
-  #     context: .
-  #   command: npm run migrate
-  #   ports:
-  #     - '3000:3000'
-  #   depends_on:
-  #     - redis
-  #     - postgres
+  app:
+    container_name: api
+    build:
+      context: .
+    command: npm run start:docker
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+      - postgres
 volumes:
   pgdata:
   pgadmin-data:

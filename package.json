@@ -11,7 +11,8 @@
     "typeorm": "typeorm-ts-node-esm",
     "generate": "POSTGRES_HOST=localhost REDIS_HOST=localhost typeorm-ts-node-esm migration:generate -d lib/connections/data-source.js -p",
     "migrate": "typeorm-ts-node-esm migration:run -d lib/connections/data-source.js",
-    "migrate:dev": "POSTGRES_HOST=localhost REDIS_HOST=localhost typeorm-ts-node-esm migration:run -d lib/connections/data-source.js"
+    "migrate:dev": "POSTGRES_HOST=localhost REDIS_HOST=localhost typeorm-ts-node-esm migration:run -d lib/connections/data-source.js",
+    "start:docker": "npm run migrate && npm run start"
   },
   "repository": {
     "type": "git",
