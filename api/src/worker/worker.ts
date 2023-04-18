@@ -1,21 +1,18 @@
-import { Job, Worker } from 'bullmq';
+import { Worker, Job } from 'bullmq';
 import { bookService } from '../services/book.js';
-import { config } from '../utils/config.js';
-
-type BookData = { title: string; author: string; content: string };
+import { BookDTO } from '../types';
+import { redisConnection } from '../utils/config.js';
 
 const handler = async (job: Job) => {
   const { body } = job.data as {
-    body: BookData;
+    body: BookDTO;
   };
 
   await bookService.addBook(body);
 };
 
 export const setupWorker = async () => {
-  const connection = { host: config.REDIS_HOST, port: config.REDIS_PORT };
-
-  const myWorker = new Worker('book', handler, {connection});
+  const myWorker = new Worker('book', handler, { connection: redisConnection });
 
   myWorker.on('completed', () => {
     console.log('the book was addded to the list!');

@@ -9,4 +9,20 @@ const getBooks = async () =>
     },
   });
 
-export const bookService = { getBooks };
+const addBook = async ({
+  title,
+  author,
+  content,
+}: {
+  title: string;
+  author: string;
+  content: string;
+}) => {
+  const book = new Book();
+  book.title = title;
+  book.author = author;
+  book.content = content;
+  await AppDataSource.manager.save(book);
+};
+
+export const bookService = { getBooks, addBook };

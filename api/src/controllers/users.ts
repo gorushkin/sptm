@@ -5,32 +5,32 @@ import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../utils/config.js';
 import { userService } from '../services/user.js';
-import { AuthData, UserData } from 'src/types.js';
+import { AuthData, UserDTO } from 'src/types.js';
 
 const userMandatoryFileds = [
   {
     field: 'firstName',
-    isCorrect: (user: UserData) => !!user.firstName,
+    isCorrect: (user: UserDTO) => !!user.firstName,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'lastName',
-    isCorrect: (user: UserData) => !!user.lastName,
+    isCorrect: (user: UserDTO) => !!user.lastName,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'password',
-    isCorrect: (user: UserData) => !!user.password,
+    isCorrect: (user: UserDTO) => !!user.password,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
   {
     field: 'passwordConfirm',
-    isCorrect: (user: UserData) => user.password === user.passwordConfirm,
+    isCorrect: (user: UserDTO) => user.password === user.passwordConfirm,
     getMessage: (_field: string) => `The password confirm should be equal to password`,
   },
   {
     field: 'login',
-    isCorrect: (user: UserData) => !!user.login,
+    isCorrect: (user: UserDTO) => !!user.login,
     getMessage: (field: string) => `The ${field} field is required!`,
   },
 ];
@@ -54,7 +54,7 @@ class UserController {
   }
 
   async register(request: FastifyRequest, reply: FastifyReply) {
-    const body = request.body as UserData;
+    const body = request.body as UserDTO;
 
     const errors = validateFields(userMandatoryFileds, body);
 

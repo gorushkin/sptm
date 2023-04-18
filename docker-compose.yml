@@ -33,16 +33,16 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
-  worker:
-    container_name: worker
-    build:
-      context: ./worker
-    ports:
-      - "3050:3050"
-    volumes:
-      - ./worker/src/:/app/src/
-    depends_on:
-      - redis
-      - postgres
+  # worker:
+  #   container_name: worker
+  #   build:
+  #     context: ./worker
+  #   ports:
+  #     - "3050:3050"
+  #   volumes:
+  #     - ./worker/src/:/app/src/
+  #   depends_on:
+  #     - redis
+  #     - postgres
 volumes:
   pgdata:
