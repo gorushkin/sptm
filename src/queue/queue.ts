@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import { BookDTO } from 'src/types.js';
+import { BookDTO } from '../types.js';
 import { redisConnection } from '../utils/config.js';
 
 const myQueue = new Queue('book', { connection: redisConnection });

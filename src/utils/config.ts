@@ -10,11 +10,10 @@ const POSTGRES_HOST = process.env.POSTGRES_HOST || 'postgres';
 const POSTGRES_PORT = Number(process.env.POSTGRES_PORT) || 5432;
 const POSTGRES_USER = process.env.POSTGRES_USER || 'booksuser';
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD || 'bookspassword';
-const POSTGRES_DB = process.env.POSTGRES_PASSWORD || 'books';
+const POSTGRES_DB = process.env.POSTGRES_DB || 'books';
 const API_HOST = process.env.API_HOST || '0.0.0.0';
 
 export const redisConnection = { host: REDIS_HOST, port: REDIS_PORT };
-console.log('redisConnection: ', redisConnection);
 
 export const config = {
   PORT,

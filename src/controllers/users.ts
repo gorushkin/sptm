@@ -5,7 +5,7 @@ import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../utils/config.js';
 import { userService } from '../services/user.js';
-import { AuthData, UserDTO } from 'src/types.js';
+import { AuthData, UserDTO } from '../types.js';
 
 const userMandatoryFileds = [
   {

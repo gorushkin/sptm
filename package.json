@@ -5,11 +5,12 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node lib/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "typeorm": "typeorm-ts-node-esm",
-    "generate": "typeorm-ts-node-esm migration:generate -d src/connections/data-source.ts -p"
+    "generate": "POSTGRES_HOST=localhost REDIS_HOST=localhost typeorm-ts-node-esm migration:generate -d lib/connections/data-source.js -p",
+    "migrate": "typeorm-ts-node-esm migration:run -d lib/connections/data-source.js"
   },
   "repository": {
     "type": "git",

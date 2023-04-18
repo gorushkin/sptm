@@ -4,8 +4,12 @@ WORKDIR /app
 
 COPY package.json ./
 COPY tsconfig.json ./
+COPY src/ ./src
+COPY .env ./
+
 RUN npm install
+RUN npm run build
+RUN npm run migrate
 
-# RUN npm run build
 
-CMD npm run dev
+CMD npm run start
