@@ -9,7 +9,5 @@ COPY .env ./
 
 RUN npm install
 RUN npm run build
-RUN npm run migrate
-
 
 CMD npm run start

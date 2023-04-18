@@ -35,10 +35,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - '5050:80'
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
   app:
     container_name: api
     build:
       context: .
+    command: npm run migrate
     ports:
       - '3000:3000'
     depends_on:
@@ -46,3 +49,4 @@ services:
       - postgres
 volumes:
   pgdata:
+  pgadmin-data:

@@ -18,12 +18,12 @@ export const AppDataSource = new DataSource({
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DB,
   logging: true,
-  synchronize: true,
+  synchronize: false,
   cache: {
     type: 'redis',
     options: { url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}` },
   },
   entities: [Book, User],
-  migrations: [`${_dirname}/migrations/*.ts`],
+  migrations: [`${_dirname}/migrations/*.js`],
   subscribers: [],
 });
