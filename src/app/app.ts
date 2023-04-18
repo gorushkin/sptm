@@ -21,9 +21,9 @@ app.setErrorHandler(function (error, _request, reply) {
   reply.status(500).send({ error: 'Something went wrong' });
 });
 
-export const appStart = async (port: number) => {
+export const appStart = async (port: number, host: string) => {
   try {
-    await app.listen({ port }, () => {
+    await app.listen({ port, host }, () => {
       console.log(`Server started at port ${port}`);
     });
   } catch (err) {

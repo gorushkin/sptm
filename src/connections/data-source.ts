@@ -19,10 +19,10 @@ export const AppDataSource = new DataSource({
   database: config.POSTGRES_DB,
   logging: true,
   synchronize: true,
-  cache: {
-    type: 'redis',
-    options: redisConnection,
-  },
+  // cache: {
+  //   type: 'redis',
+  //   options: redisConnection,
+  // },
   entities: [Book, User],
   migrations: [`${_dirname}/migrations/*.ts`],
   subscribers: [],

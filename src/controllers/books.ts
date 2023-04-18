@@ -33,6 +33,7 @@ class BookController {
   }
 
   async getBooks(_request: FastifyRequest, reply: FastifyReply) {
+    console.log('---------------');
     const books = await bookService.getBooks();
     reply.status(200).send(books);
   }

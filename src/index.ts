@@ -7,7 +7,7 @@ const init = async () => {
   try {
     await AppDataSource.initialize();
     await setupWorker();
-    appStart(config.PORT);
+    appStart(config.PORT, config.API_HOST);
   } catch (error) {
     console.log(error);
   }
