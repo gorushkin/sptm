@@ -3,7 +3,7 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
-const SALT = process.env.SALT || 'salt';
+const SALT = Number(process.env.SALT) || 10;
 const REDIS_HOST = process.env.REDIS_HOST || 'redis';
 const REDIS_PORT = Number(process.env.REDIS_PORT) || 6379;
 const POSTGRES_HOST = process.env.POSTGRES_HOST || 'postgres';
