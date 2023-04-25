@@ -13,9 +13,6 @@ export class User {
   lastName: string;
 
   @Column()
-  age: number;
-
-  @Column()
   hashPassword: string;
 
   @Column()
