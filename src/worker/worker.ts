@@ -1,5 +1,5 @@
 import { Worker, Job } from 'bullmq';
-import { bookService } from '../services/book.js';
+import { bookService } from '../services/bookService.js';
 import { BookDTO } from '../types';
 import { redisConnection } from '../utils/config.js';
 

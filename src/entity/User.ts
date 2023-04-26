@@ -1,4 +1,5 @@
-import { Entity, Column, Unique, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, Unique, PrimaryGeneratedColumn, OneToMany, Relation } from 'typeorm';
+import { Basket } from './Basket.js';
 
 @Entity()
 @Unique(['login'])
@@ -17,4 +18,7 @@ export class User {
 
   @Column()
   login: string;
+
+  @OneToMany(() => Basket, (basket) => basket.id)
+  basket: Relation<Basket[]>;
 }

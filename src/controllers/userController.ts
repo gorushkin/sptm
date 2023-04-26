@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../utils/config.js';
-import { userService } from '../services/user.js';
+import { userService } from '../services/userService.js';
 import { AuthData, UserDTO } from '../types.js';
 
 const userMandatoryFileds = [
@@ -65,6 +65,9 @@ class UserController {
     if (existingUser) throw new ValidateError('User with this login is alredy exist', 400);
 
     const hashPassword = await bcrypt.hash(body.password, config.SALT);
+
+
+    // await
 
     await userService.adduser({ ...body, hashPassword });
 

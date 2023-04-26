@@ -9,3 +9,9 @@ export type UserDTO = {
   passwordConfirm: string;
   login: string;
 };
+
+export type BasketDTO = {
+  book: number;
+  user: number;
+  quantity: number;
+};

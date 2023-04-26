@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { bookController } from '../controllers/books.js';
+import { bookController } from '../controllers/bookController.js';
 
 enum ROUTES {
   ROOT = '/',

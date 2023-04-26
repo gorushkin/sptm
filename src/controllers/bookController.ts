@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ValidateError } from '../utils/error.js';
-import { bookService } from '../services/book.js';
+import { bookService } from '../services/bookService.js';
 import { validateFields } from '../utils/validator.js';
 import { queue } from '../queue/queue.js';
 import { BookDTO } from '../types.js';

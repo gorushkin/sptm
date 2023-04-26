@@ -18,6 +18,7 @@ app.setErrorHandler(function (error, _request, reply) {
   if (error instanceof SyntaxError) {
     reply.status(400).send({ error: 'Something wrong with your request' });
   }
+  console.log(error.message);
   reply.status(500).send({ error: 'Something went wrong' });
 });
 

@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { userController } from '../controllers/users.js';
+import { userController } from '../controllers/userController.js';
 import { validateTokenMiddleware } from '../middlewares/validateTokenMiddleware.js';
 
 enum ROUTES {
