@@ -6,6 +6,13 @@ import { bookService } from '../services/bookService.js';
 import { ValidateError } from '../utils/error.js';
 
 class BasketController {
+  async validateBasket(basketId: number | undefined) {
+    if (!basketId) throw new ValidateError('There is no basket id in request', 400);
+    const basket = await basketService.getBasketById(basketId);
+    if (!basket) throw new ValidateError('There is no basket with such id', 400);
+    return basket;
+  }
+
   async addBasket(request: FastifyRequest, reply: FastifyReply) {
     const body = request.body as BasketDTO;
 
@@ -30,6 +37,23 @@ class BasketController {
     const user = await userService.getUserById(Number(userId));
     if (!user) throw new ValidateError('There is no user with such id', 400);
     const basket = await basketService.getBasketByUserId(user);
+    reply.status(200).send(basket);
+  }
+
+  async getBasketById(request: FastifyRequest, reply: FastifyReply) {
+    const { basketId } = request.params as { basketId: string };
+    if (!basketId) throw new ValidateError('There is no basket id in request', 400);
+    const basket = await basketService.getBasketById(Number(basketId));
+    if (!basket) throw new ValidateError('There is no basket with such id', 400);
+    reply.status(200).send(basket);
+  }
+
+  async updateBasket(request: FastifyRequest, reply: FastifyReply) {
+    const { basketId } = request.params as { basketId: string };
+    const { quantity } = request.body as Pick<BasketDTO, 'quantity'>;
+    if (!quantity) throw new ValidateError('There is no quantity', 400);
+    await this.validateBasket(Number(basketId));
+    const basket = await basketService.updarteBasket(Number(basketId), quantity);
     reply.status(200).send(basket);
   }
 }

@@ -6,6 +6,10 @@ import { Book } from '../entity/Book.js';
 const basketRepository = AppDataSource.getRepository(Basket);
 
 class BasketService {
+  async getBasketById(id: number) {
+    return await basketRepository.findOneBy({ id });
+  }
+
   async getBasketByUserId(user: User) {
     return await basketRepository.find({ where: { user }, relations: ['book'] });
   }
@@ -20,6 +24,10 @@ class BasketService {
 
   async getAllBaskets() {
     return await basketRepository.find();
+  }
+
+  async updarteBasket(id: number, quantity: number) {
+    return await basketRepository.update(id, { quantity });
   }
 }
 

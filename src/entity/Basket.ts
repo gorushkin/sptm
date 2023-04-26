@@ -10,9 +10,9 @@ export class Basket {
   @Column()
   quantity: number;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { eager: true })
   user: Relation<User>;
 
-  @ManyToOne(() => Book, (book) => book.id)
+  @ManyToOne(() => Book, (book) => book.id, { eager: true })
   book: Relation<Book>;
 }

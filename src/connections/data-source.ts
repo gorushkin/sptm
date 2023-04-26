@@ -18,7 +18,7 @@ export const AppDataSource = new DataSource({
   username: config.POSTGRES_USER,
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DB,
-  logging: true,
+  logging: false,
   synchronize: true,
   cache: {
     type: 'redis',
