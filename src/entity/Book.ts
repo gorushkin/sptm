@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation } from 'typeorm';
-import { Basket } from './Basket.js';
+import { Cart } from './Cart.js';
 
 @Entity()
 export class Book {
@@ -15,6 +15,6 @@ export class Book {
   @Column()
   author: string;
 
-  @OneToMany(() => Basket, (basket) => basket.id)
-  basket: Relation<Basket[]>;
+  @OneToMany(() => Cart, (cart) => cart.id)
+  cart: Relation<Cart[]>;
 }

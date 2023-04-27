@@ -11,7 +11,7 @@ import { User } from './User.js';
 
 @Entity()
 @Index(['user', 'book'], { unique: true })
-export class Basket {
+export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 

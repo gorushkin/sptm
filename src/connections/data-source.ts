@@ -6,7 +6,7 @@ import { DataSource } from 'typeorm';
 import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
 import { User } from '../entity/User.js';
-import { Basket } from '../entity/Basket.js';
+import { Cart } from '../entity/Cart.js';
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
     type: 'redis',
     options: { url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}` },
   },
-  entities: [Book, User, Basket],
+  entities: [Book, User, Cart],
   migrations: [`${_dirname}/migrations/*.js`],
   subscribers: [],
 });
