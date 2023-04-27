@@ -124,6 +124,15 @@ class CartController {
     const record = await this.getRecord(recordId);
     reply.status(200).send(record);
   };
+
+  deleteCart = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { userId } = request.params as { userId: string };
+    const user = await userService.getUserById(Number(userId));
+    if (!user) throw new ValidateError('There is no user with such id', 400);
+    const cart = await cartService.getUserCart(user);
+    await cartService.deleteCart(cart);
+    reply.status(200).send('deleteCart');
+  };
 }
 
 export const cartController = new CartController();

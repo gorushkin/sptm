@@ -10,8 +10,9 @@ enum ROUTES {
 export const cartRoutes = async (app: FastifyInstance) => {
   app.get(ROUTES.ROOT, cartController.getAllCarts);
   app.post(ROUTES.ROOT, cartController.addCartRecord);
-  app.get(ROUTES.USER_ID, cartController.getCart);
   app.delete(ROUTES.USER_ID_CART_ID, cartController.deleteCartRecord);
   app.get(ROUTES.USER_ID_CART_ID, cartController.getCartRecord);
   app.patch(ROUTES.USER_ID_CART_ID, cartController.updateCartRecord);
+  app.get(ROUTES.USER_ID, cartController.getCart);
+  app.delete(ROUTES.USER_ID, cartController.deleteCart);
 };
