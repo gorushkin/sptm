@@ -1,8 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, Relation } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  Relation,
+  Index,
+} from 'typeorm';
 import { Book } from './Book.js';
 import { User } from './User.js';
 
 @Entity()
+@Index(['user', 'book'], { unique: true })
 export class Basket {
   @PrimaryGeneratedColumn()
   id: number;

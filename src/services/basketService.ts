@@ -10,24 +10,41 @@ class BasketService {
     return await basketRepository.findOneBy({ id });
   }
 
-  async getBasketByUserId(user: User) {
+  async getUserBasket(user: User) {
     return await basketRepository.find({ where: { user }, relations: ['book'] });
   }
 
-  async addBasket({ user, book, quantity }: { user: User; book: Book; quantity: number }) {
+  addBasketRecord = async ({
+    book,
+    quantity,
+    user,
+  }: {
+    user: User;
+    book: Book;
+    quantity: number;
+  }) => {
     const basket = new Basket();
     basket.user = user;
     basket.book = book;
     basket.quantity = quantity;
-    return await basketRepository.save(basket);
-  }
 
-  async getAllBaskets() {
+    return await basketRepository.save(basket);
+  };
+
+  async getAllBasketRecords() {
     return await basketRepository.find();
   }
 
-  async updarteBasket(id: number, quantity: number) {
-    return await basketRepository.update(id, { quantity });
+  async updateBasketRecord({ id, book, quantity }: { id: number; quantity?: number; book?: Book }) {
+    return await basketRepository.update(id, { quantity, book });
+  }
+
+  async deleteBasketRecord(id: number) {
+    return await basketRepository.delete(id);
+  }
+
+  async deleteBasket(baskets: Basket[]) {
+    await Promise.all(baskets.map(async (basket) => await this.deleteBasketRecord(basket.id)));
   }
 }
 

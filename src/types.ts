@@ -10,8 +10,13 @@ export type UserDTO = {
   login: string;
 };
 
-export type BasketDTO = {
+export type BasketRecordDTO = {
   book: number;
+  quantity: number;
+};
+
+export type BasketDTO = {
   user: number;
+  book: number;
   quantity: number;
 };

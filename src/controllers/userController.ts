@@ -66,9 +66,6 @@ class UserController {
 
     const hashPassword = await bcrypt.hash(body.password, config.SALT);
 
-
-    // await
-
     await userService.adduser({ ...body, hashPassword });
 
     const token = this.getToken({ login: body.login });
@@ -103,6 +100,15 @@ class UserController {
     const users = await userService.getUsers();
     reply.status(200).send(users);
   }
+
+  getUser = async (userId: string | undefined) => {
+    if (!userId) throw new ValidateError('There is no user id in request', 400);
+    const user = await userService.getUserById(Number(userId));
+    if (!user) throw new ValidateError('There is no user with such id', 400);
+    return user;
+  };
+
+  validateUser = async (userId: string | undefined) => this.getUser(userId);
 }
 
 export const userController = new UserController();
