@@ -44,3 +44,11 @@ export type MyRequest = FastifyRequest & {
 export type MyFastify = FastifyInstance & {
   authenticate: (request: MyRequest, reply: FastifyReply) => void;
 };
+
+export type CartRequest = MyRequest & {
+  params: {
+    recordId: string;
+    userId: string;
+  };
+  body: CartDTO;
+};

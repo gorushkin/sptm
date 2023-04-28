@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { cartService } from '../services/cartService.js';
-import { CartDTO, CartProperties, PropertiesList } from '../types.js';
+import { CartProperties, CartRequest, PropertiesList } from '../types.js';
 import { userService } from '../services/userService.js';
 import { bookService } from '../services/bookService.js';
 import { ValidateError } from '../utils/error.js';
@@ -44,8 +44,8 @@ class CartController {
     if (isBookExistInCartAlready) throw new ValidateError('Book is already exist in cart', 400);
   };
 
-  addCartRecord = async (request: FastifyRequest, reply: FastifyReply) => {
-    const body = request.body as CartDTO;
+  addCartRecord = async (request: CartRequest, reply: FastifyReply) => {
+    const { body } = request;
 
     this.validateProperties(['book', 'quantity', 'user'], body);
 
@@ -76,32 +76,27 @@ class CartController {
     reply.status(200).send(carts);
   };
 
-  getCart = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { userId } = request.params as { userId: string };
+  getCart = async (request: CartRequest, reply: FastifyReply) => {
+    const { userId } = request.params;
     const user = await userService.getUserById(Number(userId));
     if (!user) throw new ValidateError('There is no user with such id', 400);
     const cart = await cartService.getUserCart(user);
     reply.status(200).send(cart);
   };
 
-  deleteCartRecord = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { recordId, userId } = request.params as {
-      recordId: string;
-      userId: string;
-    };
+  deleteCartRecord = async (request: CartRequest, reply: FastifyReply) => {
+    const { recordId, userId } = request.params;
     await userController.validateUser(userId);
     await this.validateBelonging({ recordId, userId });
     await cartService.deleteCartRecord(Number(recordId));
     reply.status(200).send({ message: `Record ${recordId} was deleted!!!` });
   };
 
-  updateCartRecord = async (request: FastifyRequest, reply: FastifyReply) => {
-    // TODO: add validation to middleware
-    const { recordId, userId } = request.params as {
-      recordId: string;
-      userId: string;
-    };
-    const body = request.body as CartDTO;
+  updateCartRecord = async (request: CartRequest, reply: FastifyReply) => {
+    const {
+      params: { recordId, userId },
+      body,
+    } = request;
 
     this.validateProperties(['quantity'], body);
     await userController.validateUser(userId);
@@ -114,19 +109,16 @@ class CartController {
     reply.status(200).send({ message: `Record ${recordId} was updated!!!` });
   };
 
-  getCartRecord = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { recordId, userId } = request.params as {
-      recordId: string;
-      userId: string;
-    };
+  getCartRecord = async (request: CartRequest, reply: FastifyReply) => {
+    const { recordId, userId } = request.params;
 
     await userController.validateUser(userId);
     const record = await this.getRecord(recordId);
     reply.status(200).send(record);
   };
 
-  deleteCart = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { userId } = request.params as { userId: string };
+  deleteCart = async (request: CartRequest, reply: FastifyReply) => {
+    const { userId } = request.params;
     const user = await userService.getUserById(Number(userId));
     if (!user) throw new ValidateError('There is no user with such id', 400);
     const cart = await cartService.getUserCart(user);
