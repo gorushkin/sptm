@@ -10,7 +10,7 @@ app.register(routes);
 
 app.decorateRequest('isAuthenticated', false);
 
-app.addHook('preHandler', (request: MyRequest, _reply: FastifyReply) => {
+app.addHook('preHandler', async (request: MyRequest, _reply: FastifyReply) => {
   const token = request.headers.authorization;
   const isAuthenticated = token ? validateToken(token) : false;
   request.isAuthenticated = isAuthenticated;
