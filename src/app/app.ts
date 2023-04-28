@@ -1,8 +1,8 @@
 import fastify, { FastifyReply } from 'fastify';
 import { routes } from '../routes/routes.js';
 import { AuthError, ValidateError } from '../utils/error.js';
-import { validateToken } from '../utils/userInfo.js';
-import { MyRequest } from 'src/types.js';
+import { MyRequest } from '../types.js';
+import { validateToken } from '../utils/validator.js';
 
 const app = fastify();
 
@@ -10,9 +10,9 @@ app.register(routes);
 
 app.decorateRequest('isAuthenticated', false);
 
-app.addHook('preHandler', async (request: MyRequest, _reply: FastifyReply) => {
+app.addHook('preHandler', (request: MyRequest, _reply: FastifyReply) => {
   const token = request.headers.authorization;
-  const isAuthenticated = token ? await validateToken(token) : false;
+  const isAuthenticated = token ? validateToken(token) : false;
   request.isAuthenticated = isAuthenticated;
 });
 

@@ -1,4 +1,6 @@
 import { Rule, Validators } from 'src/types';
+import { config } from '../utils/config.js';
+import jwt from 'jsonwebtoken';
 
 export const validateFields = <T>(fields: Rule<T>[], body: T) =>
   fields
@@ -30,4 +32,13 @@ export const validateProperties = <T extends string>(
       return validator(value) ? '' : `The ${item.property} property is required!`;
     })
     .filter(Boolean);
+};
+
+export const validateToken = (token: string) => {
+  try {
+    jwt.verify(token, config.JWT_SECRET) as { login: string };
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
