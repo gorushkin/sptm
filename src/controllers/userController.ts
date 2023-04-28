@@ -50,7 +50,7 @@ const authMandatoryFileds = [
 
 class UserController {
   getToken(payload: { login: string }) {
-    return jwt.sign(payload, config.JWT_SECRET, { expiresIn: 1000 * 60 });
+    return jwt.sign(payload, config.JWT_SECRET, { expiresIn: '1h' });
   }
 
   async register(request: FastifyRequest, reply: FastifyReply) {

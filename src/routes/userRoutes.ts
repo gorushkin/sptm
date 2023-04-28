@@ -1,6 +1,5 @@
-import { FastifyInstance } from 'fastify';
+import { MyFastify } from 'src/types.js';
 import { userController } from '../controllers/userController.js';
-import { validateTokenMiddleware } from '../middlewares/validateTokenMiddleware.js';
 
 enum ROUTES {
   REGISTER = '/register',
@@ -8,8 +7,8 @@ enum ROUTES {
   ROOT = '/',
 }
 
-export const userRoutes = async (app: FastifyInstance) => {
+export const userRoutes = async (app: MyFastify) => {
   app.post(ROUTES.REGISTER, userController.register.bind(userController));
   app.post(ROUTES.LOGIN, userController.login.bind(userController));
-  app.get(ROUTES.ROOT, { preValidation: [validateTokenMiddleware] }, userController.getUsers);
+  app.get(ROUTES.ROOT, { preHandler: app.authenticate }, userController.getUsers);
 };

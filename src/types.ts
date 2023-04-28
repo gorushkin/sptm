@@ -1,3 +1,6 @@
+import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { User } from './entity/User';
+
 export type BookDTO = { title: string; author: string; content: string };
 
 export type AuthData = { login: string; password: string };
@@ -32,3 +35,12 @@ export type Validators = 'string' | 'positiveNumber';
 export type CartProperties = 'quantity' | 'user' | 'book' | 'ddd';
 
 export type PropertiesList<T> = { property: T; type: Validators }[];
+
+export type MyRequest = FastifyRequest & {
+  user: User | null;
+  isAuthenticated: boolean;
+};
+
+export type MyFastify = FastifyInstance & {
+  authenticate: (request: MyRequest, reply: FastifyReply) => void;
+};
