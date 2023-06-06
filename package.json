@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node lib/index.js",
+    "start:app": "POSTGRES_HOST='localhost' REDIS_HOST='localhost' node lib/index.js",
     "dev": "POSTGRES_HOST='localhost' REDIS_HOST='localhost' nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "typeorm": "typeorm-ts-node-esm",
