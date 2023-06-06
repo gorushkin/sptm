@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { validateFields } from '../utils/validator.js';
 import jwt from 'jsonwebtoken';
 import { config } from '../utils/config.js';
-import { userService } from '../services/user.js';
+import { userService } from '../services/userService.js';
 import { AuthData, UserDTO } from '../types.js';
 
 const userMandatoryFileds = [
@@ -50,7 +50,7 @@ const authMandatoryFileds = [
 
 class UserController {
   getToken(payload: { login: string }) {
-    return jwt.sign(payload, config.JWT_SECRET, { expiresIn: 1000 * 60 });
+    return jwt.sign(payload, config.JWT_SECRET, { expiresIn: '1h' });
   }
 
   async register(request: FastifyRequest, reply: FastifyReply) {
@@ -100,6 +100,15 @@ class UserController {
     const users = await userService.getUsers();
     reply.status(200).send(users);
   }
+
+  getUser = async (userId: string | undefined) => {
+    if (!userId) throw new ValidateError('There is no user id in request', 400);
+    const user = await userService.getUserById(Number(userId));
+    if (!user) throw new ValidateError('There is no user with such id', 400);
+    return user;
+  };
+
+  validateUser = async (userId: string | undefined) => this.getUser(userId);
 }
 
 export const userController = new UserController();

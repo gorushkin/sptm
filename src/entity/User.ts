@@ -1,4 +1,5 @@
-import { Entity, Column, Unique, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, Unique, PrimaryGeneratedColumn, OneToMany, Relation } from 'typeorm';
+import { Cart } from './Cart.js';
 
 @Entity()
 @Unique(['login'])
@@ -13,11 +14,11 @@ export class User {
   lastName: string;
 
   @Column()
-  age: number;
-
-  @Column()
   hashPassword: string;
 
   @Column()
   login: string;
+
+  @OneToMany(() => Cart, (cart) => cart.id)
+  cart: Relation<Cart[]>;
 }

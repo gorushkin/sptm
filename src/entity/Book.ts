@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Relation } from 'typeorm';
+import { Cart } from './Cart.js';
 
 @Entity()
 export class Book {
@@ -13,4 +14,7 @@ export class Book {
 
   @Column()
   author: string;
+
+  @OneToMany(() => Cart, (cart) => cart.id)
+  cart: Relation<Cart[]>;
 }

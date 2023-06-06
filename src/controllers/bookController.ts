@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ValidateError } from '../utils/error.js';
-import { bookService } from '../services/book.js';
+import { bookService } from '../services/bookService.js';
 import { validateFields } from '../utils/validator.js';
 import { queue } from '../queue/queue.js';
 import { BookDTO } from '../types.js';
@@ -33,6 +33,15 @@ class BookController {
     const books = await bookService.getBooks();
     reply.status(200).send(books);
   }
+
+  getBook = async (bookId: string | undefined) => {
+    if (!bookId) throw new ValidateError('There is no book id in request', 400);
+    const book = await bookService.getBook(Number(bookId));
+    if (!book) throw new ValidateError('There is no book with such id', 400);
+    return book;
+  };
+
+  validateBook = async (bookId: string | undefined) => this.getBook(bookId);
 }
 
 export const bookController = new BookController();

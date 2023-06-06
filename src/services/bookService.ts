@@ -28,4 +28,9 @@ const addBook = async ({
   await AppDataSource.manager.save(book);
 };
 
-export const bookService = { getBooks, addBook };
+export const getBook = async (id: number) => {
+  const book = await AppDataSource.getRepository(Book).findOneBy({ id });
+  return book;
+};
+
+export const bookService = { getBooks, addBook, getBook };

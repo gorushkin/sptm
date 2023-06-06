@@ -3,6 +3,8 @@ import { User } from '../entity/User.js';
 
 const getUser = async (login: string) => await AppDataSource.manager.findOneBy(User, { login });
 
+const getUserById = async (id: number) => await AppDataSource.manager.findOneBy(User, { id });
+
 const addUser = async ({
   firstName,
   lastName,
@@ -27,4 +29,4 @@ const getUsers = async () => {
   return users;
 };
 
-export const userService = { getUser, adduser: addUser, getUsers };
+export const userService = { getUser, adduser: addUser, getUsers, getUserById };
