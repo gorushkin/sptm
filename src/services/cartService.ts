@@ -2,6 +2,8 @@ import { AppDataSource } from '../connections/data-source.js';
 import { User } from '../entity/User.js';
 import { Cart } from '../entity/Cart.js';
 import { Book } from '../entity/Book.js';
+import { Store } from '../entity/Store.js';
+import { CustomError } from '../utils/error.js';
 
 const cartRepository = AppDataSource.getRepository(Cart);
 
@@ -9,9 +11,16 @@ type AddCartRecordProps = {
   user: User;
   book: Book;
   quantity: number;
+  storeRecord: Store;
+  newStoreQuantity: number;
 };
 
-type UpdateCartRecordProps = { id: number; quantity?: number };
+type UpdateCartRecordProps = {
+  id: number;
+  quantity?: number;
+  storeRecord: Store;
+  newStoreQuantity: number;
+};
 
 class CartService {
   async getCartById(id: number) {
@@ -22,21 +31,50 @@ class CartService {
     return await cartRepository.find({ where: { user }, relations: ['book'] });
   };
 
-  addCartRecord = async ({ book, quantity, user }: AddCartRecordProps) => {
+  addCartRecord = async ({
+    book,
+    quantity,
+    user,
+    newStoreQuantity,
+    storeRecord,
+  }: AddCartRecordProps) => {
     const cart = new Cart();
     cart.user = user;
     cart.book = book;
     cart.quantity = quantity;
 
-    return await cartRepository.save(cart);
+    await AppDataSource.manager.transaction(async (transactionalEntityManager) => {
+      try {
+        await transactionalEntityManager.update(Store, storeRecord.id, {
+          quantity: newStoreQuantity,
+        });
+        await transactionalEntityManager.save(cart);
+      } catch (error) {
+        throw new CustomError('There was an error during transaction', 400);
+      }
+    });
   };
 
   getAllCartRecords = async () => {
     return await cartRepository.find();
   };
 
-  updateCartRecord = async ({ id, quantity }: UpdateCartRecordProps) => {
-    return await cartRepository.update(id, { quantity });
+  updateCartRecord = async ({
+    id,
+    quantity,
+    newStoreQuantity,
+    storeRecord,
+  }: UpdateCartRecordProps) => {
+    await AppDataSource.manager.transaction(async (transactionalEntityManager) => {
+      try {
+        await transactionalEntityManager.update(Store, storeRecord.id, {
+          quantity: newStoreQuantity,
+        });
+        await transactionalEntityManager.update(Cart, id, { quantity });
+      } catch (error) {
+        throw new CustomError('There was an error during transaction', 400);
+      }
+    });
   };
 
   async deleteCartRecord(id: number) {
