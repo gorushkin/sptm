@@ -5,24 +5,24 @@ import { Book } from '../entity/Book.js';
 
 const cartRepository = AppDataSource.getRepository(Cart);
 
+type AddCartRecordProps = {
+  user: User;
+  book: Book;
+  quantity: number;
+};
+
+type UpdateCartRecordProps = { id: number; quantity?: number };
+
 class CartService {
   async getCartById(id: number) {
     return await cartRepository.findOneBy({ id });
   }
 
-  async getUserCart(user: User) {
+  getUserCart = async (user: User) => {
     return await cartRepository.find({ where: { user }, relations: ['book'] });
-  }
+  };
 
-  addCartRecord = async ({
-    book,
-    quantity,
-    user,
-  }: {
-    user: User;
-    book: Book;
-    quantity: number;
-  }) => {
+  addCartRecord = async ({ book, quantity, user }: AddCartRecordProps) => {
     const cart = new Cart();
     cart.user = user;
     cart.book = book;
@@ -31,13 +31,13 @@ class CartService {
     return await cartRepository.save(cart);
   };
 
-  async getAllCartRecords() {
+  getAllCartRecords = async () => {
     return await cartRepository.find();
-  }
+  };
 
-  async updateCartRecord({ id, quantity }: { id: number; quantity?: number }) {
+  updateCartRecord = async ({ id, quantity }: UpdateCartRecordProps) => {
     return await cartRepository.update(id, { quantity });
-  }
+  };
 
   async deleteCartRecord(id: number) {
     return await cartRepository.delete(id);

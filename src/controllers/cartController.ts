@@ -3,16 +3,23 @@ import { cartService } from '../services/cartService.js';
 import { CartProperties, CartRequest, PropertiesList } from '../types.js';
 import { userService } from '../services/userService.js';
 import { bookService } from '../services/bookService.js';
-import { ValidateError } from '../utils/error.js';
+import { StoreError, ValidateError } from '../utils/error.js';
 import { validateProperties } from '../utils/validator.js';
 import { userController } from './userController.js';
 import { Book } from '../entity/Book.js';
+import { storeService } from '../services/storeService.js';
+import { Cart } from '../entity/Cart.js';
 
 const cartProperties: PropertiesList<CartProperties> = [
   { property: 'quantity', type: 'positiveNumber' },
   { property: 'user', type: 'positiveNumber' },
   { property: 'book', type: 'positiveNumber' },
 ];
+
+type ValidateBelongingProps = {
+  recordId: string;
+  userId: string;
+};
 
 class CartController {
   validateRecord = async (cartId: string | undefined) => this.getRecord(cartId);
@@ -29,19 +36,18 @@ class CartController {
     return cart;
   };
 
-  validateBelonging = async ({ recordId, userId }: { recordId: string; userId: string }) => {
+  validateBelonging = async ({ recordId, userId }: ValidateBelongingProps): Promise<Cart> => {
     const record = await this.getRecord(recordId);
     const isRecordBelongCorrect = record.user.id === Number(userId);
     if (!isRecordBelongCorrect) throw new ValidateError('This record belongs to another user', 400);
+    return record;
   };
 
-  validateBookPrecence = async ({ userId, book }: { userId: number; book: Book }) => {
-    const user = await userService.getUserById(userId);
-    if (!user) throw new ValidateError('User id is not valid', 400);
-    const userBooks = await cartService.getUserCart(user);
-    const userBooksIds = userBooks.map(({ book: { id } }) => id);
-    const isBookExistInCartAlready = userBooksIds.includes(book.id);
-    if (isBookExistInCartAlready) throw new ValidateError('Book is already exist in cart', 400);
+  validateStoreRecord = async (book: Book, quantity: number) => {
+    const storeRecord = await storeService.getStoreRecord(book);
+    if (!storeRecord) throw new ValidateError('There is no book on the store', 400);
+    const { quantity: currentQuantity } = storeRecord;
+    if (currentQuantity - quantity < 0) throw new StoreError('There are not such amount', 403);
   };
 
   addCartRecord = async (request: CartRequest, reply: FastifyReply) => {
@@ -61,6 +67,8 @@ class CartController {
     const isBookExistInCartAlready = userBooksIds.includes(book.id);
 
     if (isBookExistInCartAlready) throw new ValidateError('Book is already exist in cart', 400);
+
+    await this.validateStoreRecord(book, body.quantity);
 
     const cartRecord = await cartService.addCartRecord({
       book,
@@ -100,12 +108,15 @@ class CartController {
 
     this.validateProperties(['quantity'], body);
     await userController.validateUser(userId);
-    await this.validateBelonging({ recordId, userId });
+    const { book } = await this.validateBelonging({ recordId, userId });
+
+    await this.validateStoreRecord(book, body.quantity);
 
     await cartService.updateCartRecord({
       id: Number(recordId),
       quantity: body.quantity,
     });
+
     reply.status(200).send({ message: `Record ${recordId} was updated!!!` });
   };
 
