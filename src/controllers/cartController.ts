@@ -6,7 +6,7 @@ import { bookService } from '../services/bookService.js';
 import { ValidateError } from '../utils/error.js';
 import { validateProperties } from '../utils/validator.js';
 import { userController } from './userController.js';
-import { Book } from 'src/entity/Book.js';
+import { Book } from '../entity/Book.js';
 
 const cartProperties: PropertiesList<CartProperties> = [
   { property: 'quantity', type: 'positiveNumber' },
