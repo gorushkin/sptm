@@ -18,6 +18,13 @@ export class ValidateError extends CustomError {
   }
 }
 
+export class StoreError extends CustomError {
+  constructor(error: string, statusCode: number) {
+    super(error, statusCode);
+    this.type = 'Store Error';
+  }
+}
+
 export class AuthError extends CustomError {
   constructor() {
     super('Forbidden', 403);

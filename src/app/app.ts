@@ -1,6 +1,6 @@
 import fastify, { FastifyReply } from 'fastify';
 import { routes } from '../routes/routes.js';
-import { AuthError, ValidateError } from '../utils/error.js';
+import { AuthError, StoreError, ValidateError } from '../utils/error.js';
 import { MyRequest } from '../types.js';
 import { validateToken } from '../utils/validator.js';
 
@@ -26,6 +26,10 @@ app.setErrorHandler(function (error, _request, reply) {
     reply.status(statusCode).send({ message, errors });
   }
   if (error instanceof AuthError) {
+    const { message, statusCode } = error;
+    reply.status(statusCode).send({ message });
+  }
+  if (error instanceof StoreError) {
     const { message, statusCode } = error;
     reply.status(statusCode).send({ message });
   }

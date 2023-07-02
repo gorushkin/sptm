@@ -58,7 +58,7 @@ class UserController {
 
     const errors = validateFields(userMandatoryFileds, body);
 
-    if (!!errors.length) throw new ValidateError('Validate errors', 400, errors);
+    if (errors.length) throw new ValidateError('Validate errors', 400, errors);
 
     const existingUser = await userService.getUser(body.login);
 

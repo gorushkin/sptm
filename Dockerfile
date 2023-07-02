@@ -3,6 +3,7 @@ FROM node:14.17-alpine
 WORKDIR /app
 
 COPY package.json ./
+COPY package-lock.json ./
 COPY tsconfig.json ./
 COPY src/ ./src
 COPY .env ./

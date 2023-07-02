@@ -7,6 +7,7 @@ import { config } from '../utils/config.js';
 import { Book } from '../entity/Book.js';
 import { User } from '../entity/User.js';
 import { Cart } from '../entity/Cart.js';
+import { Store } from '../entity/Store.js';
 
 const _filename = fileURLToPath(import.meta.url);
 const _dirname = path.dirname(_filename);
@@ -19,12 +20,12 @@ export const AppDataSource = new DataSource({
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DB,
   logging: false,
-  synchronize: true,
+  synchronize: false,
   cache: {
     type: 'redis',
     options: { url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}` },
   },
-  entities: [Book, User, Cart],
+  entities: [Book, User, Cart, Store],
   migrations: [`${_dirname}/migrations/*.js`],
   subscribers: [],
 });
