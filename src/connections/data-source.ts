@@ -20,7 +20,7 @@ export const AppDataSource = new DataSource({
   password: config.POSTGRES_PASSWORD,
   database: config.POSTGRES_DB,
   logging: false,
-  synchronize: true,
+  synchronize: false,
   cache: {
     type: 'redis',
     options: { url: `redis://${config.REDIS_HOST}:${config.REDIS_PORT}` },

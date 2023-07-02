@@ -43,12 +43,12 @@ class CartService {
     cart.book = book;
     cart.quantity = quantity;
 
-    await AppDataSource.manager.transaction(async (transactionalEntityManager) => {
+    return await AppDataSource.manager.transaction(async (transactionalEntityManager) => {
       try {
         await transactionalEntityManager.update(Store, storeRecord.id, {
           quantity: newStoreQuantity,
         });
-        await transactionalEntityManager.save(cart);
+        return await transactionalEntityManager.save(cart);
       } catch (error) {
         throw new CustomError('There was an error during transaction', 400);
       }
